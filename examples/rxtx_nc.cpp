@@ -28,6 +28,7 @@ double sample_rate = 10e6;
 double tx_gain = 30;
 //double rx_gain = 30;
 double amp = 0.5;
+bool cbflag = false;
 
 char pnseq[PNSEQLEN];
 unsigned int pnoffset;
@@ -46,11 +47,33 @@ int main(int argc, char * argv[]){
     }
     set_realtime_priority();
 
-    wait_for_signal();
+    //int waitover = wait_for_signal();
 
-	std::cout << "Start transmit chain..." << std::endl;
+    //////////////////////////////////////////
+    std::cout << "Start: wait for signal." << std::endl;
+    std::cout << cbflag << std::endl;
+    usrp_params params = usrp_params();
+    // ul_receiver rx = ul_receiver(&callback, freq, sample_rate, tx_gain, amp);
+    ul_receiver rx = ul_receiver(&callback, params);
+    while(1)
+    {
+         if (cbflag==true)
+         {
+             std::cout << "Break reached." << std::endl;
+             break;
+         }
+         else
+             std::cout << "" ;
+     }
+    rx.pause();
+    std::cout << "End: wait for signal." << std::endl;
+    cbflag = false;
+    //////////////////////////////////////////
+	
+    std::cout << "Start transmit chain..." << std::endl;
     // test_tx(freq, sample_rate, tx_gain, amp, phy_rate);
 
+    while(1);
 	return 0;
 }
 
@@ -99,10 +122,25 @@ void test_tx(double freq, double sample_rate, double tx_gain, double amp, Rate p
  */
 int wait_for_signal()
 {
-    usrp_params params = usrp_params();
-    // ul_receiver rx = ul_receiver(&callback, freq, sample_rate, tx_gain, amp);
-    ul_receiver rx = ul_receiver(&callback, params);
-    rx.pause();
+    // std::cout << "Start: wait for signal." << std::endl;
+    // std::cout << cbflag << std::endl;
+    // usrp_params params = usrp_params();
+    // // ul_receiver rx = ul_receiver(&callback, freq, sample_rate, tx_gain, amp);
+    // ul_receiver rx = ul_receiver(&callback, params);
+    // while(1)
+    // {
+    //      if (cbflag==true)
+    //      {
+    //          std::cout << "Break reached." << std::endl;
+    //          break;
+    //      }
+    //      else
+    //          std::cout << "*" ;
+    //  }
+    // rx.pause();
+    // std::cout << "End: wait for signal." << std::endl;
+    // cbflag = false;
+    // return 0;
 }
 
 /*!
@@ -130,6 +168,7 @@ bool get_pnsequence()
  */
 bool set_realtime_priority()
 {
+    std::cout << "Start: set realtime priority." << std::endl;
     // Get the current thread
     pthread_t this_thread = pthread_self();
 
@@ -142,6 +181,7 @@ bool set_realtime_priority()
         return false;
     }
 
+    std::cout << "End: set realtime priority." << std::endl;
     return true;
 }
 
@@ -151,7 +191,9 @@ bool set_realtime_priority()
 
 void callback(int stp)
 {
-    std::cout << "Received a callback" << std::endl;
+    std::cout << "Received a callback : "<< stp << std::endl;
+    cbflag = true;
+    std::cout << cbflag << std::endl;
 }
 
 

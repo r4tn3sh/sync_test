@@ -44,6 +44,7 @@ namespace fun
      */
     void ul_receiver::seq_detector_loop()
     {
+        std::cout << "PN sequence detection started" << std::endl;
         auto begin_time = std::chrono::high_resolution_clock::now();
         // auto end_time = 0;
         // auto duration = 0;
@@ -57,21 +58,21 @@ namespace fun
             //         m_rec_chain.process_samples(m_samples);
             int pk_index = correlate_ulseq(m_samples);
 
-            int stp = 0;
-            m_callback(stp);
 
             sem_post(&m_pause); // Flags the end of this loop and wakes up any other threads waiting on this semaphore
                                 // i.e. a call to the pause() function in the main thread.
 
             if(pk_index < PKTLEN)
             {
-                std::cout<< "Signal found" << std::endl;
+                m_callback(1);
+                std::cout<< "Signal found at " << pk_index << std::endl;
                 break;
             }
             auto end_time = std::chrono::high_resolution_clock::now();
             auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end_time-begin_time).count();
-            if(duration > 2000000)
+            if(duration > 1000000)
             {
+                m_callback(0);
                 std::cout<< "Timeout occured" << std::endl;
                 break;
             }
@@ -90,35 +91,65 @@ namespace fun
             std::cout << "Cannot open file.\n";
             return(-1);
         }
+        else
+        {
+            std::cout << "File opened for correlation "<< samples.size() << std::endl;
+        }
         char pnseq_c[ULSEQLEN];
         double pnseq[ULSEQLEN];
         pnfile.read(pnseq_c, ULSEQLEN);
 
+        for (int i=0; i<ULSEQLEN; i++)
+        {
+            pnseq[i] = 2*((double)(pnseq_c[i]))-1;
+            std::cout << pnseq[i] << " " ;
+        }
+
         std::complex<double> temp_mul;
         std::complex<double> temp_mean;
         double temp_norm_v;
-        double corr_coeff;
+        double corr_coeff = 0;
+        double sqr_sum = 0;
         for (int i=0; i<PKTLEN; i++)
         {
             temp_mul = (0, 0);
             temp_mean = (0, 0);
+            sqr_sum = 0;
             for (int j=0; j<ULSEQLEN; j++)
             {
                 // temp_mul.real() += samples[i+j].real() * pnseq[j];
                 // temp_mul.imag() += samples[i+j].imag() * pnseq[j];
                 temp_mul += samples[i+j] * pnseq[j];
-                temp_mean += samples[j];
+                sqr_sum += pow(abs(samples[i+j]),2);
+                temp_mean += samples[i+j];
             }
             temp_mean/=ULSEQLEN;
+            std::cout << "Mean : " << temp_mean << std::endl;
             temp_norm_v = 0;
-            for (int j=0; j<ULSEQLEN; j++)
-            {
-                temp_norm_v += abs(samples[i+j]-temp_mean)*abs(samples[i+j]-temp_mean);
-            }
-            corr_coeff = abs(temp_mul)/sqrt(temp_norm_v);
+            // for (int j=0; j<ULSEQLEN; j++)
+            // {
+            //     // temp_norm_v += abs((samples[i+j]-temp_mean)*conj(samples[i+j]-temp_mean));
+            //     std::cout <<  " " << samples.at(i+j) <<" " << pow(abs(samples.at(i+j)),2) << std::endl;
+            //     // std::cout <<  " " << samples.at(i+j) <<" " << pow(abs(samples.at(i+j)-temp_mean),2) << std::endl;
+            //     // std::cout << " " << temp_norm_v << std::endl;
+            // }
+            // corr_coeff = abs(temp_mul-temp_mean)/(sqrt(temp_norm_v*ULSEQLEN));
+            // corr_coeff = abs(temp_mul)/(sqrt(temp_norm_v*ULSEQLEN));
+            corr_coeff = abs(temp_mul)/(sqrt((sqr_sum-ULSEQLEN*pow(abs(temp_mean),2))*ULSEQLEN));
+            if(corr_coeff>0)
+                std::cout << "Correlation coefficient : " << corr_coeff << " " << abs(temp_mul) << " " << sqr_sum << " " << temp_mean <<  std::endl;
+            std::cout << std::endl;
             
             if(corr_coeff>COEFFTHRESH)
+            {
+                for (int j=0; j<ULSEQLEN; j++)
+                {
+                    std::cout <<  " " << samples.at(i+j) <<" " << pow(abs(samples.at(i+j)),2) << std::endl;
+                }
+                std::cout << "Correlation coefficient above threshold. " << corr_coeff << std::endl;
+                std::cout <<  temp_mul << " " << temp_mean << " " << temp_norm_v << " " << std::endl;
                 return(i);
+            }
         }
         return(PKTLEN);
     }
@@ -129,6 +160,7 @@ namespace fun
      */
     void ul_receiver::pause()
     {
+        std::cout << "Pausing the receiver" << std::endl;
         sem_wait(&m_pause);
     }
 
@@ -139,6 +171,7 @@ namespace fun
      */
     void ul_receiver::resume()
     {
+        std::cout << "Resuming the receiver" << std::endl;
         sem_post(&m_pause);
     }
 }
