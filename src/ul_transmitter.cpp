@@ -6,6 +6,7 @@
  */
 
 #include "ul_transmitter.h"
+#include <iostream>
 
 namespace fun {
 
@@ -30,12 +31,14 @@ namespace fun {
      */
     void ul_transmitter::send_data(std::vector<unsigned char> payload, Rate phy_rate)
     {
-        std::vector<std::complex<double> > samples;
+        std::cout << "Start sending data "<< payload.size() << std::endl;
+        std::vector<std::complex<double> > samples(payload.size());
         for (int i = 0; i<payload.size(); i++)
         {
             samples[i] = 0.5*(2*(double)(payload.at(i))-1, 0.0);
         }
-        // m_usrp.send_burst_sync(samples);
+        std::cout << "Samples ready" << std::endl;
+        m_usrp.send_burst_sync(samples);
     }
 
 }
