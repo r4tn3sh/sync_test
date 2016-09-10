@@ -110,12 +110,23 @@ namespace fun
         double temp_norm_v;
         double corr_coeff = 0;
         double sqr_sum = 0;
+        double numr;
+        double denm;
+        unsigned int N = ULSEQLEN;
+
+        double pn_mean=0;
+        for (int j=0; j<N; j++)
+        {
+            pn_mean += pnseq[j];
+        }
+        pn_mean/=N;
+        std::cout << "PN mean : " << pn_mean << std::endl;
         for (int i=0; i<PKTLEN; i++)
         {
             temp_mul = (0, 0);
             temp_mean = (0, 0);
             sqr_sum = 0;
-            for (int j=0; j<ULSEQLEN; j++)
+            for (int j=0; j<N; j++)
             {
                 // temp_mul.real() += samples[i+j].real() * pnseq[j];
                 // temp_mul.imag() += samples[i+j].imag() * pnseq[j];
@@ -123,8 +134,8 @@ namespace fun
                 sqr_sum += pow(abs(samples[i+j]),2);
                 temp_mean += samples[i+j];
             }
-            temp_mean/=ULSEQLEN;
-            std::cout << "Mean : " << temp_mean << std::endl;
+            std::cout << "Sample sum : " << temp_mean << std::endl;
+            temp_mean/=N;
             temp_norm_v = 0;
             // for (int j=0; j<ULSEQLEN; j++)
             // {
@@ -135,14 +146,20 @@ namespace fun
             // }
             // corr_coeff = abs(temp_mul-temp_mean)/(sqrt(temp_norm_v*ULSEQLEN));
             // corr_coeff = abs(temp_mul)/(sqrt(temp_norm_v*ULSEQLEN));
-            corr_coeff = abs(temp_mul)/(sqrt((sqr_sum-ULSEQLEN*pow(abs(temp_mean),2))*ULSEQLEN));
-            if(corr_coeff>0)
-                std::cout << "Correlation coefficient : " << corr_coeff << " " << abs(temp_mul) << " " << sqr_sum << " " << temp_mean <<  std::endl;
+            numr = abs(temp_mul)-N*abs(temp_mean*pn_mean);
+            denm = sqrt(sqr_sum-N*pow(abs(temp_mean),2))*sqrt(N);
+            corr_coeff = numr/denm;
+            
+            if(corr_coeff<-1 || corr_coeff>1)
+            {
+                std::cout << numr << "/" << denm << std::endl;
+                std::cout << "Correlation coefficient : " << corr_coeff << " " << abs(temp_mul) << " " << sqr_sum << " " << pow(abs(temp_mean),2) << " " <<(sqr_sum-N*pow(abs(temp_mean),2))*N <<  std::endl;
+            }
             std::cout << std::endl;
             
             if(corr_coeff>COEFFTHRESH)
             {
-                for (int j=0; j<ULSEQLEN; j++)
+                for (int j=0; j<N; j++)
                 {
                     std::cout <<  " " << samples.at(i+j) <<" " << pow(abs(samples.at(i+j)),2) << std::endl;
                 }
