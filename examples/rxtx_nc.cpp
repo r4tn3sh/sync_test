@@ -51,8 +51,8 @@ int main(int argc, char * argv[]){
 
     get_pnsequence();
     usrp_params params = usrp_params();
-    // ul_transmitter tx = ul_transmitter(freq, sample_rate, tx_gain, amp);
-    ul_transmitter tx = ul_transmitter(freq, params);
+    ul_transmitter tx = ul_transmitter(freq, sample_rate, tx_gain, amp);
+    // ul_transmitter tx = ul_transmitter(freq, params);
     // ul_receiver rx = ul_receiver(&callback, freq, sample_rate, tx_gain, amp);
     ul_receiver rx = ul_receiver(&callback, params);
 
