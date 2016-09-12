@@ -40,7 +40,7 @@ namespace fun
          * \param tx_amp -> #tx_amp
          * \param device_addr -> #device_addr
          */
-        usrp_params(double freq = 2.42e9, double rate = 5e6, double tx_gain=20, double rx_gain=20, double tx_amp=1.0, std::string device_addr="") :
+        usrp_params(double freq = 2.42e9, double rate = 5e6, double tx_gain=20, double rx_gain=20, double tx_amp=1.0, std::string device_addr="addr=192.168.10.2") :
             freq(freq),
             rate(rate),
             tx_gain(tx_gain),

@@ -70,7 +70,7 @@ namespace fun
             }
             auto end_time = std::chrono::high_resolution_clock::now();
             auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end_time-begin_time).count();
-            if(duration > 1000000)
+            if(duration > 3000000)
             {
                 m_callback(0);
                 std::cout<< "Timeout occured" << std::endl;
@@ -93,7 +93,7 @@ namespace fun
         }
         else
         {
-            std::cout << "File opened for correlation "<< samples.size() << std::endl;
+            // std::cout << "File opened for correlation "<< samples.size() << std::endl;
         }
         char pnseq_c[ULSEQLEN];
         double pnseq[ULSEQLEN];
@@ -102,7 +102,7 @@ namespace fun
         for (int i=0; i<ULSEQLEN; i++)
         {
             pnseq[i] = 2*((double)(pnseq_c[i]))-1;
-            std::cout << pnseq[i] << " " ;
+            // std::cout << pnseq[i] << " " ;
         }
 
         std::complex<double> temp_mul;
@@ -120,7 +120,7 @@ namespace fun
             pn_mean += pnseq[j];
         }
         pn_mean/=N;
-        std::cout << "PN mean : " << pn_mean << std::endl;
+        // std::cout << "PN mean : " << pn_mean << std::endl;
         for (int i=0; i<PKTLEN; i++)
         {
             temp_mul = (0, 0);
@@ -134,7 +134,7 @@ namespace fun
                 sqr_sum += pow(abs(samples[i+j]),2);
                 temp_mean += samples[i+j];
             }
-            std::cout << "Sample sum : " << temp_mean << std::endl;
+            // std::cout << "Sample sum : " << temp_mean << std::endl;
             temp_mean/=N;
             temp_norm_v = 0;
             // for (int j=0; j<ULSEQLEN; j++)
@@ -155,7 +155,6 @@ namespace fun
                 std::cout << numr << "/" << denm << std::endl;
                 std::cout << "Correlation coefficient : " << corr_coeff << " " << abs(temp_mul) << " " << sqr_sum << " " << pow(abs(temp_mean),2) << " " <<(sqr_sum-N*pow(abs(temp_mean),2))*N <<  std::endl;
             }
-            std::cout << std::endl;
             
             if(corr_coeff>COEFFTHRESH)
             {

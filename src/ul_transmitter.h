@@ -45,7 +45,7 @@ namespace fun {
          *  - *Note:
          *     + rx_gain -> 20 even though it is irrelevant for the transmitter
          */
-        ul_transmitter(double freq = 5.72e9, double samp_rate = 5e6, double tx_gain = 20, double tx_amp=1.0, std::string device_addr="");
+        ul_transmitter(double freq = 5.72e9, double samp_rate = 5e6, double tx_gain = 20, double tx_amp=1.0, std::string device_addr="addr=192.168.10.2");
 
         /*!
          * \brief Constructor for the transmitter that uses the usrp_params struct

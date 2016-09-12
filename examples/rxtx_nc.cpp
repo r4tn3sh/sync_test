@@ -28,6 +28,7 @@ double sample_rate = 10e6;
 double tx_gain = 30;
 //double rx_gain = 30;
 double amp = 0.5;
+
 bool cbflag = false;
 
 char pnseq[PNSEQLEN];
@@ -51,7 +52,8 @@ int main(int argc, char * argv[]){
 
     get_pnsequence();
     usrp_params params = usrp_params();
-    ul_transmitter tx = ul_transmitter(freq, sample_rate, tx_gain, amp);
+    std::cout << params.device_addr <<std::endl;
+    ul_transmitter tx = ul_transmitter(freq, sample_rate, tx_gain, amp, params.device_addr);
     // ul_transmitter tx = ul_transmitter(freq, params);
     // ul_receiver rx = ul_receiver(&callback, freq, sample_rate, tx_gain, amp);
     ul_receiver rx = ul_receiver(&callback, params);

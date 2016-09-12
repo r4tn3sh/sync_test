@@ -25,6 +25,7 @@ double sample_rate = 10e6;
 double tx_gain = 30;
 //double rx_gain = 30;
 double amp = 0.5;
+std::string device_addr = "addr=192.168.10.2";
 
 char pnseq[PNSEQLEN];
 unsigned int pnoffset;
@@ -44,9 +45,11 @@ int main(int argc, char * argv[]){
     set_realtime_priority();
 
 	std::cout << "Start transmit chain..." << std::endl;
-    test_tx(freq, sample_rate, tx_gain, amp, phy_rate);
-
-	return 0;
+    while(1)
+    {
+        test_tx(freq, sample_rate, tx_gain, amp, phy_rate);
+        sleep(1);
+    }
 }
 
 /*!
