@@ -47,6 +47,21 @@ int main(int argc, char * argv[]){
     }
     set_realtime_priority();
 
+    srand(time(NULL)); //Initialize random seed
+
+    get_pnsequence();
+    usrp_params params = usrp_params();
+    ul_transmitter tx = ul_transmitter(freq, sample_rate, tx_gain, amp);
+    // ul_transmitter tx = ul_transmitter(freq, params);
+
+    std::vector<unsigned char> ulseq(ULSEQLEN);
+    std::vector<unsigned char> packets(PKTLEN,0);
+
+    for(int i = 0; i < ULSEQLEN; i++)
+    {
+        ulseq[i] = pnseq[pnoffset + i];
+        packets[i] = pnseq[pnoffset + i];
+    }
     //int waitover = wait_for_signal();
 
     //////////////////////////////////////////
@@ -73,6 +88,14 @@ int main(int argc, char * argv[]){
     std::cout << "Start transmit chain..." << std::endl;
     // test_tx(freq, sample_rate, tx_gain, amp, phy_rate);
 
+    //Transmit all the packets
+    std::string tx_phy_rate = RateParams(phy_rate).name;
+    for(int i = 0; i < 10; i++)
+    {
+        tx.send_data(packets, phy_rate);
+    }
+    //////////////////////////////////////////
+
     while(1);
 	return 0;
 }
@@ -92,28 +115,28 @@ int main(int argc, char * argv[]){
  */
 void test_tx(double freq, double sample_rate, double tx_gain, double amp, Rate phy_rate)
 {
-    srand(time(NULL)); //Initialize random seed
+    // srand(time(NULL)); //Initialize random seed
 
-    get_pnsequence();
-    usrp_params params = usrp_params();
-    ul_transmitter tx = ul_transmitter(freq, sample_rate, tx_gain, amp);
-    // ul_transmitter tx = ul_transmitter(freq, params);
+    // get_pnsequence();
+    // usrp_params params = usrp_params();
+    // ul_transmitter tx = ul_transmitter(freq, sample_rate, tx_gain, amp);
+    // // ul_transmitter tx = ul_transmitter(freq, params);
 
-    std::vector<unsigned char> ulseq(ULSEQLEN);
-    std::vector<unsigned char> packets(PKTLEN,0);
+    // std::vector<unsigned char> ulseq(ULSEQLEN);
+    // std::vector<unsigned char> packets(PKTLEN,0);
 
-    for(int i = 0; i < ULSEQLEN; i++)
-    {
-        ulseq[i] = pnseq[pnoffset + i];
-        packets[i] = pnseq[pnoffset + i];
-    }
+    // for(int i = 0; i < ULSEQLEN; i++)
+    // {
+    //     ulseq[i] = pnseq[pnoffset + i];
+    //     packets[i] = pnseq[pnoffset + i];
+    // }
 
-    //Transmit all the packets
-    std::string tx_phy_rate = RateParams(phy_rate).name;
-    for(int i = 0; i < 10000; i++)
-    {
-        tx.send_data(packets, phy_rate);
-    }
+    // //Transmit all the packets
+    // std::string tx_phy_rate = RateParams(phy_rate).name;
+    // for(int i = 0; i < 10000; i++)
+    // {
+    //     tx.send_data(packets, phy_rate);
+    // }
 
 }
 
