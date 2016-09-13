@@ -70,7 +70,7 @@ int main(int argc, char * argv[]){
             tx.send_data(packets, phy_rate);
         }
         std::cout << "Transmission number : " << ++tx_count << std::endl;
-        // sleep(1);
+        sleep(1);
     }
 }
 

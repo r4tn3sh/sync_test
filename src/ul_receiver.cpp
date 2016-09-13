@@ -104,6 +104,10 @@ namespace fun
             pnseq[i] = 2*((double)(pnseq_c[i]))-1;
             // std::cout << pnseq[i] << " " ;
         }
+        for (int i=0; i<samples.size(); i++)
+        {
+            samples[i] = pnseq[i%ULSEQLEN];
+        }
 
         std::complex<double> temp_mul;
         std::complex<double> temp_mean;

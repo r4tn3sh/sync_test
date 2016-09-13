@@ -31,13 +31,13 @@ namespace fun {
      */
     void ul_transmitter::send_data(std::vector<unsigned char> payload, Rate phy_rate)
     {
-        std::cout << "Start sending data "<< payload.size() << std::endl;
+        // std::cout << "Start sending data "<< payload.size() << std::endl;
         std::vector<std::complex<double> > samples(payload.size());
         for (int i = 0; i<payload.size(); i++)
         {
             samples[i] = 0.5*(2*(double)(payload.at(i))-1, 0.0);
         }
-        std::cout << "Samples ready" << std::endl;
+        // std::cout << "Samples ready" << std::endl;
         m_usrp.send_burst_sync(samples);
     }
 
