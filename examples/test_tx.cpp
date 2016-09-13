@@ -15,11 +15,11 @@ using namespace fun;
 void test_tx(double freq, double sample_rate, double tx_gain, double amp, Rate phy_rate);
 bool set_realtime_priority();
 
-double freq = 5.72e9;
+double freq = 2e9;
 double sample_rate = 5e6;
 double tx_gain = 30;
 //double rx_gain = 30;
-double amp = 0.5;
+double amp = 0.7;
 Rate phy_rate = RATE_1_2_BPSK;
 
 int main(int argc, char * argv[]){

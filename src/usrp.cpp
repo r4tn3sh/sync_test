@@ -9,6 +9,7 @@
  */
 
 #include "usrp.h"
+#include <iostream>
 
 namespace fun
 {
@@ -95,6 +96,7 @@ namespace fun
             for(int x = 0; x < samples.size(); x++)
                 samples[x] *= m_params.tx_amp;
 
+        // std::cout << samples[0];
         // Send the samples
         uhd::tx_metadata_t tx_metadata;
         tx_metadata.start_of_burst = true;

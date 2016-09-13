@@ -6,6 +6,7 @@
  */
 
 #include "transmitter.h"
+#include <iostream>
 
 namespace fun {
 

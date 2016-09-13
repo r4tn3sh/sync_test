@@ -12,7 +12,7 @@
 #include "ul_transmitter.h"
 
 #define PNSEQLEN 2000
-#define PKTLEN 640
+#define PKTLEN 160
 #define ULSEQLEN 160
 using namespace fun;
 
@@ -20,11 +20,11 @@ void test_tx(double freq, double sample_rate, double tx_gain, double amp, Rate p
 bool set_realtime_priority();
 bool get_pnsequence();
 
-double freq = 2.42e9;
-double sample_rate = 10e6;
+double freq = 2e9;
+double sample_rate = 5e6;
 double tx_gain = 30;
 //double rx_gain = 30;
-double amp = 0.5;
+double amp = 0.9;
 std::string device_addr = "addr=192.168.10.2";
 
 char pnseq[PNSEQLEN];
@@ -48,7 +48,7 @@ int main(int argc, char * argv[]){
     srand(time(NULL)); //Initialize random seed
 
     get_pnsequence();
-    ul_transmitter tx = ul_transmitter(freq, sample_rate, tx_gain, amp);
+    ul_transmitter tx = ul_transmitter(freq, sample_rate, tx_gain, amp, device_addr);
 
     std::vector<unsigned char> ulseq(ULSEQLEN);
     std::vector<unsigned char> packets(PKTLEN,0);
@@ -70,7 +70,7 @@ int main(int argc, char * argv[]){
             tx.send_data(packets, phy_rate);
         }
         std::cout << "Transmission number : " << ++tx_count << std::endl;
-        sleep(1);
+        // sleep(1);
     }
 }
 
