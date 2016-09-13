@@ -18,7 +18,7 @@
 #define PKTLEN 640
 #define ULSEQLEN 160
 #define NUM_RX_SAMPLES 800
-#define COEFFTHRESH 0.8
+#define COEFFTHRESH 0.82
 
 namespace fun
 {

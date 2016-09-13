@@ -23,7 +23,7 @@ bool set_realtime_priority();
 bool get_pnsequence();
 int wait_for_signal();
 
-double freq = 2.42e9;
+double freq = 2e9;
 double sample_rate = 10e6;
 double tx_gain = 30;
 //double rx_gain = 30;
@@ -92,13 +92,15 @@ int main(int argc, char * argv[]){
 
     //Transmit all the packets
     std::string tx_phy_rate = RateParams(phy_rate).name;
-    for(int i = 0; i < 10; i++)
+    while(1) // Don't have a very good reason for this
     {
-        tx.send_data(packets, phy_rate);
+        for(int i = 0; i < 10; i++)
+        {
+            tx.send_data(packets, phy_rate);
+        }
     }
     //////////////////////////////////////////
 
-    while(1); // Don't have a very good reason for this
 	return 0;
 }
 

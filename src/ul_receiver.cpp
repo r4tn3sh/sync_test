@@ -120,7 +120,7 @@ namespace fun
             pn_mean += pnseq[j];
         }
         pn_mean/=N;
-        double test_thresh = 0.25;
+        double test_thresh = 0.8;
         // std::cout << "PN mean : " << pn_mean << std::endl;
         for (int i=0; i<PKTLEN; i++)
         {
@@ -163,7 +163,7 @@ namespace fun
             {
                 for (int j=0; j<N; j++)
                 {
-                    std::cout <<  " " << samples.at(i+j) <<" " << pow(abs(samples.at(i+j)),2) << std::endl;
+                    std::cout <<  " " << samples.at(i+j) <<" " << pnseq[j] << std::endl;
                 }
                 std::cout << "Correlation coefficient above threshold. " << corr_coeff << std::endl;
                 std::cout <<  temp_mul << " " << temp_mean << " " << temp_norm_v << " " << std::endl;
