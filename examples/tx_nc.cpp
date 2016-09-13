@@ -45,10 +45,32 @@ int main(int argc, char * argv[]){
     set_realtime_priority();
 
 	std::cout << "Start transmit chain..." << std::endl;
+    srand(time(NULL)); //Initialize random seed
+
+    get_pnsequence();
+    ul_transmitter tx = ul_transmitter(freq, sample_rate, tx_gain, amp);
+
+    std::vector<unsigned char> ulseq(ULSEQLEN);
+    std::vector<unsigned char> packets(PKTLEN,0);
+
+    for(int i = 0; i < ULSEQLEN; i++)
+    {
+        ulseq[i] = pnseq[pnoffset + i];
+        packets[i] = pnseq[pnoffset + i];
+    }
+
+    int tx_count = 0;
     while(1)
     {
-        test_tx(freq, sample_rate, tx_gain, amp, phy_rate);
-        sleep(1);
+        // test_tx(freq, sample_rate, tx_gain, amp, phy_rate);
+        //Transmit all the packets
+        std::string tx_phy_rate = RateParams(phy_rate).name;
+        for(int i = 0; i < 10000; i++)
+        {
+            tx.send_data(packets, phy_rate);
+        }
+        std::cout << "Transmission number : " << ++tx_count << std::endl;
+        // sleep(1);
     }
 }
 
@@ -67,26 +89,26 @@ int main(int argc, char * argv[]){
  */
 void test_tx(double freq, double sample_rate, double tx_gain, double amp, Rate phy_rate)
 {
-    srand(time(NULL)); //Initialize random seed
+    // srand(time(NULL)); //Initialize random seed
 
-    get_pnsequence();
-    ul_transmitter tx = ul_transmitter(freq, sample_rate, tx_gain, amp);
+    // get_pnsequence();
+    // ul_transmitter tx = ul_transmitter(freq, sample_rate, tx_gain, amp);
 
-    std::vector<unsigned char> ulseq(ULSEQLEN);
-    std::vector<unsigned char> packets(PKTLEN,0);
+    // std::vector<unsigned char> ulseq(ULSEQLEN);
+    // std::vector<unsigned char> packets(PKTLEN,0);
 
-    for(int i = 0; i < ULSEQLEN; i++)
-    {
-        ulseq[i] = pnseq[pnoffset + i];
-        packets[i] = pnseq[pnoffset + i];
-    }
+    // for(int i = 0; i < ULSEQLEN; i++)
+    // {
+    //     ulseq[i] = pnseq[pnoffset + i];
+    //     packets[i] = pnseq[pnoffset + i];
+    // }
 
-    //Transmit all the packets
-    std::string tx_phy_rate = RateParams(phy_rate).name;
-    for(int i = 0; i < 10000; i++)
-    {
-        tx.send_data(packets, phy_rate);
-    }
+    // //Transmit all the packets
+    // std::string tx_phy_rate = RateParams(phy_rate).name;
+    // for(int i = 0; i < 10000; i++)
+    // {
+    //     tx.send_data(packets, phy_rate);
+    // }
 
 }
 
