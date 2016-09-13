@@ -60,16 +60,16 @@ int main(int argc, char * argv[]){
     }
 
     int tx_count = 0;
+    std::string tx_phy_rate = RateParams(phy_rate).name;
     while(1)
     {
         // test_tx(freq, sample_rate, tx_gain, amp, phy_rate);
         //Transmit all the packets
-        std::string tx_phy_rate = RateParams(phy_rate).name;
         for(int i = 0; i < 10000; i++)
         {
             tx.send_data(packets, phy_rate);
         }
-        std::cout << "Transmission number : " << ++tx_count << std::endl;
+        // std::cout << "Transmission number : " << ++tx_count << std::endl;
         // sleep(1);
     }
 }
