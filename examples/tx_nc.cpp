@@ -21,7 +21,7 @@ bool set_realtime_priority();
 bool get_pnsequence();
 
 double freq = 2e9;
-double sample_rate = 5e6;
+double sample_rate = 10e6;
 double tx_gain = 30;
 //double rx_gain = 30;
 double amp = 0.9;

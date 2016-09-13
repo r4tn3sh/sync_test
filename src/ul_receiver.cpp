@@ -120,7 +120,7 @@ namespace fun
             pn_mean += pnseq[j];
         }
         pn_mean/=N;
-        double test_thresh = 0.9;
+        double test_thresh = 0.25;
         // std::cout << "PN mean : " << pn_mean << std::endl;
         for (int i=0; i<PKTLEN; i++)
         {
