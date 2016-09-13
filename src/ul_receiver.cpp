@@ -70,7 +70,7 @@ namespace fun
             }
             auto end_time = std::chrono::high_resolution_clock::now();
             auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end_time-begin_time).count();
-            if(duration > 3000000)
+            if(duration > 30000000)
             {
                 m_callback(0);
                 std::cout<< "Timeout occured" << std::endl;
@@ -150,6 +150,8 @@ namespace fun
             denm = sqrt(sqr_sum-N*pow(abs(temp_mean),2))*sqrt(N);
             corr_coeff = numr/denm;
             
+            if(corr_coeff<-0.25 || corr_coeff>0.25)
+                std::cout << "Correlation coefficient : " << corr_coeff << " " << abs(temp_mul) << " " << sqr_sum << " " << pow(abs(temp_mean),2) << " " <<(sqr_sum-N*pow(abs(temp_mean),2))*N <<  std::endl;
             if(corr_coeff<-1 || corr_coeff>1)
             {
                 std::cout << numr << "/" << denm << std::endl;
