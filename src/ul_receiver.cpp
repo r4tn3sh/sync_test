@@ -104,10 +104,6 @@ namespace fun
             pnseq[i] = 2*((double)(pnseq_c[i]))-1;
             // std::cout << pnseq[i] << " " ;
         }
-        for (int i=0; i<samples.size(); i++)
-        {
-            samples[i] = pnseq[i%ULSEQLEN];
-        }
 
         std::complex<double> temp_mul;
         std::complex<double> temp_mean;
@@ -124,6 +120,7 @@ namespace fun
             pn_mean += pnseq[j];
         }
         pn_mean/=N;
+        double test_thresh = 0.9;
         // std::cout << "PN mean : " << pn_mean << std::endl;
         for (int i=0; i<PKTLEN; i++)
         {
@@ -154,8 +151,8 @@ namespace fun
             denm = sqrt(sqr_sum-N*pow(abs(temp_mean),2))*sqrt(N);
             corr_coeff = numr/denm;
             
-            if(corr_coeff<-0.25 || corr_coeff>0.25)
-                std::cout << "Correlation coefficient : " << corr_coeff << " " << abs(temp_mul) << " " << sqr_sum << " " << pow(abs(temp_mean),2) << " " <<(sqr_sum-N*pow(abs(temp_mean),2))*N <<  std::endl;
+            if(corr_coeff<-test_thresh || corr_coeff>test_thresh)
+                std::cout << "Correlation coefficient : " << corr_coeff << " " << i <<  std::endl;
             if(corr_coeff<-1 || corr_coeff>1)
             {
                 std::cout << numr << "/" << denm << std::endl;
