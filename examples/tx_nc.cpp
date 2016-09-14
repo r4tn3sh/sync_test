@@ -12,7 +12,7 @@
 #include "ul_transmitter.h"
 
 #define PNSEQLEN 2000
-#define PKTLEN 160
+#define PKTLEN 640
 #define ULSEQLEN 160
 using namespace fun;
 

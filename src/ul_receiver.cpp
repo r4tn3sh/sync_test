@@ -47,7 +47,8 @@ namespace fun
         std::cout << "PN sequence detection started" << std::endl;
         auto begin_time = std::chrono::high_resolution_clock::now();
         // auto end_time = 0;
-        // auto duration = 0;
+        // aiuto duration = 0;
+        unsigned int pnsearch = 0;
         while(1)
         {
             sem_wait(&m_pause); // Block if the ul_receiver is paused
@@ -56,8 +57,11 @@ namespace fun
 
             // std::vector<std::vector<unsigned char> > packets =
             //         m_rec_chain.process_samples(m_samples);
-            int pk_index = correlate_ulseq(m_samples);
+            int pk_index = PKTLEN;
+            if (pnsearch%41 == 0)
+                pk_index = correlate_ulseq(m_samples);
 
+            pnsearch++;
 
             sem_post(&m_pause); // Flags the end of this loop and wakes up any other threads waiting on this semaphore
                                 // i.e. a call to the pause() function in the main thread.
