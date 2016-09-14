@@ -24,7 +24,7 @@ double freq = 2e9;
 double sample_rate = 10e6;
 double tx_gain = 30;
 //double rx_gain = 30;
-double amp = 0.9;
+double amp = 0.5;
 std::string device_addr = "addr=192.168.10.2";
 
 char pnseq[PNSEQLEN];
@@ -55,7 +55,7 @@ int main(int argc, char * argv[]){
 
     for(int i = 0; i < ULSEQLEN; i++)
     {
-        ulseq[i] = pnseq[pnoffset + i];
+        // ulseq[i] = pnseq[pnoffset + i];
         packets[i] = pnseq[pnoffset + i];
     }
 
@@ -64,11 +64,11 @@ int main(int argc, char * argv[]){
     while(1)
     {
         // test_tx(freq, sample_rate, tx_gain, amp, phy_rate);
-        //Transmit all the packets
-        for(int i = 0; i < 10000; i++)
-        {
+        // // Transmit all the packets
+        // for(int i = 0; i < 10000; i++)
+        // {
             tx.send_data(packets, phy_rate);
-        }
+        // }
         // std::cout << "Transmission number : " << ++tx_count << std::endl;
         // sleep(1);
     }

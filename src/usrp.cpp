@@ -68,6 +68,7 @@ namespace fun
     {
         sem_wait(&m_tx_sem);
 
+        // std::cout << samples.size() << std::endl;
         uhd::tx_metadata_t tx_metadata;
         tx_metadata.start_of_burst = true;
         tx_metadata.end_of_burst = true;
