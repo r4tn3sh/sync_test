@@ -58,7 +58,7 @@ namespace fun
             // std::vector<std::vector<unsigned char> > packets =
             //         m_rec_chain.process_samples(m_samples);
             int pk_index = PKTLEN;
-            if (pnsearch%41 == 0)
+            if (pnsearch%7 == 0)
                 pk_index = correlate_ulseq(m_samples);
 
             pnsearch++;
@@ -128,6 +128,8 @@ namespace fun
         // std::cout << "PN mean : " << pn_mean << std::endl;
         for (int i=0; i<PKTLEN; i++)
         {
+            if(i%7>0)
+                continue;
             temp_mul = (0, 0);
             temp_mean = (0, 0);
             sqr_sum = 0;
