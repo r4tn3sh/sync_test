@@ -197,9 +197,9 @@ namespace fun
             unsigned int wait_time = 64000 - (i_dur_ns - peak_location*100)%64000;
             std::cout << "Duration " << dur_ns.count() << " : " << wait_time<< std::endl;
 
-            // Assuming one iteration takes 5500 nanoseconds
+            // Assuming one iteration takes 55 nanoseconds
             // start = std::chrono::high_resolution_clock::now();
-            for (int j=0; j<wait_time/5500; j++)
+            for (int j=0; j<wait_time/55; j++)
             {
                 std::cout << "*";
             }
