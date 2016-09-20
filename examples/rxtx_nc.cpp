@@ -72,11 +72,13 @@ int main(int argc, char * argv[]){
     //////////////////////////////////////////
     std::cout << "Start: wait for signal." << std::endl;
     std::cout << cbflag << std::endl;
+    tx.txflagtime = 0.0;
     while(1)
     {
          if (cbflag==true)
          {
-             std::cout << "Break reached." << std::endl;
+             tx.txflagtime = rx.flagtime;
+             std::cout << "Break reached. Transmission begins at " << tx.txflagtime  << "::"<< std::endl;
              break;
          }
          else
@@ -94,10 +96,7 @@ int main(int argc, char * argv[]){
     std::string tx_phy_rate = RateParams(phy_rate).name;
     while(1) // Don't have a very good reason for this
     {
-        for(int i = 0; i < 10; i++)
-        {
             tx.send_data(packets, phy_rate);
-        }
     }
     //////////////////////////////////////////
 

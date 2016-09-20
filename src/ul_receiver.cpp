@@ -45,6 +45,7 @@ namespace fun
      */
     void ul_receiver::seq_detector_loop()
     {
+        uhd::rx_metadata_t rx_md;
         std::cout << "PN sequence detection started" << std::endl;
         auto begin_time = std::chrono::high_resolution_clock::now();
         // auto end_time = 0;
@@ -55,16 +56,17 @@ namespace fun
             sem_wait(&m_pause); // Block if the ul_receiver is paused
 
             m_usrp.get_samples(NUM_RX_SAMPLES, m_samples);
+            rx_md = m_usrp.rx_meta;
             g_start_time = std::chrono::high_resolution_clock::now();
 
-            auto now_c = std::chrono::system_clock::to_time_t(g_start_time);
-            
-
+            std::cout << rx_md.time_spec.get_frac_secs() << std::endl;
             // std::vector<std::vector<unsigned char> > packets =
             //         m_rec_chain.process_samples(m_samples);
             int pk_index = PKTLEN;
             if (pnsearch%7 == 0)
+            {
                 pk_index = correlate_ulseq(m_samples);
+            }
 
             pnsearch++;
 
@@ -73,9 +75,9 @@ namespace fun
 
             if(pk_index < PKTLEN)
             {
+                flagtime = rx_md.time_spec.get_frac_secs()+pk_index*0.0000001;
                 m_callback(pk_index);
-                std::cout<< "Signal found at " << pk_index  << std::endl;
-                std::cout<< "Time  " << now_c  << std::endl;
+                std::cout<< "Signal found at " << pk_index << " at time " << flagtime << std::endl;
                 break;
             }
             auto end_time = std::chrono::high_resolution_clock::now();
@@ -130,7 +132,7 @@ namespace fun
             pn_mean += pnseq[j];
         }
         pn_mean/=N;
-        double test_thresh = 0.0;
+        double test_thresh = 0.9;
         // std::cout << "PN mean : " << pn_mean << std::endl;
         auto start = std::chrono::high_resolution_clock::now();
         int peak_location = PKTLEN;

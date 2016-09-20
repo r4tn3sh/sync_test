@@ -92,6 +92,8 @@ namespace fun
          */
         int correlate_ulseq(std::vector<std::complex<double> > samples);
 
+        double flagtime;
+
     private:
 
         void ul_receiver_chain_loop(); //!< Infinite while loop where samples are received from USRP and processed by the ul_receiver_chain

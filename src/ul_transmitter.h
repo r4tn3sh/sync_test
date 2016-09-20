@@ -71,6 +71,8 @@ namespace fun {
          */
         void send_data(std::vector<unsigned char> payload, Rate phy_rate = RATE_1_2_BPSK);
 
+        double txflagtime;
+
     private:
 
         usrp m_usrp; //!< The usrp object used to send the generated frames over the air

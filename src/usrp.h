@@ -92,6 +92,9 @@ namespace fun
          */
         void get_samples(int num_samples, std::vector<std::complex<double> > & buffer);
 
+        uhd::rx_metadata_t rx_meta;
+        uhd::tx_metadata_t tx_meta;
+
 
     private:
 

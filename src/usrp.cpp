@@ -73,6 +73,10 @@ namespace fun
         tx_metadata.start_of_burst = true;
         tx_metadata.end_of_burst = true;
         tx_metadata.has_time_spec = false;
+        // if (tx_meta.time_spec.get_frac_secs() > m_usrp.get_time_now().get_fracs_secs())
+        // {
+        //     std::cout << tx_meta.time_spec.get_frac_secs() << ":" << m_usrp.get_time_now().get_fracs_secs() << std::endl;
+        // }
         m_tx_streamer->send(&samples[0], samples.size(), tx_metadata);
 
         sem_post(&m_tx_sem);
@@ -128,7 +132,6 @@ namespace fun
     void usrp::get_samples(int num_samples, std::vector<std::complex<double> > & buffer)
     {
         // Get some samples
-        uhd::rx_metadata_t rx_meta;
         m_rx_streamer->recv(&buffer[0], num_samples, rx_meta);
     }
 
