@@ -59,7 +59,6 @@ namespace fun
             rx_md = m_usrp.rx_meta;
             g_start_time = std::chrono::high_resolution_clock::now();
 
-            std::cout << rx_md.time_spec.get_frac_secs() << std::endl;
             // std::vector<std::vector<unsigned char> > packets =
             //         m_rec_chain.process_samples(m_samples);
             int pk_index = PKTLEN;
@@ -75,9 +74,11 @@ namespace fun
 
             if(pk_index < PKTLEN)
             {
-                flagtime = rx_md.time_spec.get_frac_secs()+pk_index*0.0000001;
+                flagtimefrac = rx_md.time_spec.get_frac_secs() + pk_index*0.0000001 + 1000*80*0.0000001;
+                flagtimefull = rx_md.time_spec.get_full_secs() + std::floor(flagtimefrac);
+                flagtimefrac = flagtimefrac - std::floor(flagtimefrac);
                 m_callback(pk_index);
-                std::cout<< "Signal found at " << pk_index << " at time " << flagtime << std::endl;
+                std::cout<< "Signal found at " << pk_index << " at time " << flagtimefull << ":" << flagtimefrac << std::endl;
                 break;
             }
             auto end_time = std::chrono::high_resolution_clock::now();

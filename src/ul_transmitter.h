@@ -71,7 +71,8 @@ namespace fun {
          */
         void send_data(std::vector<unsigned char> payload, Rate phy_rate = RATE_1_2_BPSK);
 
-        double txflagtime;
+        double txflagtimefrac;
+        double txflagtimefull;
 
     private:
 

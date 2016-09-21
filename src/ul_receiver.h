@@ -92,7 +92,8 @@ namespace fun
          */
         int correlate_ulseq(std::vector<std::complex<double> > samples);
 
-        double flagtime;
+        double flagtimefrac;
+        double flagtimefull;
 
     private:
 

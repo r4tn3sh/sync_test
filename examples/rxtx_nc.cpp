@@ -72,13 +72,15 @@ int main(int argc, char * argv[]){
     //////////////////////////////////////////
     std::cout << "Start: wait for signal." << std::endl;
     std::cout << cbflag << std::endl;
-    tx.txflagtime = 0.0;
+    tx.txflagtimefrac = 0.0;
+    tx.txflagtimefull = 0.0;
     while(1)
     {
          if (cbflag==true)
          {
-             tx.txflagtime = rx.flagtime;
-             std::cout << "Break reached. Transmission begins at " << tx.txflagtime  << "::"<< std::endl;
+             tx.txflagtimefrac = rx.flagtimefrac;
+             tx.txflagtimefull = rx.flagtimefull;
+             // std::cout << "Break reached. Transmission begins at " << tx.txflagtime  << "::"<< std::endl;
              break;
          }
          else

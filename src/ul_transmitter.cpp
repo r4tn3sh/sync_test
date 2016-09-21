@@ -32,22 +32,25 @@ namespace fun {
     void ul_transmitter::send_data(std::vector<unsigned char> payload, Rate phy_rate)
     {
         // std::cout << "Start sending data "<< payload.size() << std::endl;
-        std::vector<std::complex<double> > samples(payload.size());
-        for (int i = 0; i<payload.size(); i++)
+        int N = payload.size();
+        std::vector<std::complex<double> > samples(N);
+        for (int i = 0; i<N; i++)
         {
             // samples.push_back(0.5, 0.0);
             samples[i] = 0.05*std::complex<double>((2*(double)payload[i])-1, 0.0);
         }
         // std::cout << "Samples ready" << std::endl;
         // m_usrp.send_burst_sync(samples);
-        if (txflagtime>0.0)
+        if (txflagtimefull+txflagtimefrac>0.0)
         {
             m_usrp.tx_meta.has_time_spec = true;
-            m_usrp.tx_meta.time_spec = uhd::time_spec_t(txflagtime);
-            std::cout << "Samples ready :" << txflagtime << std::endl;
+            m_usrp.tx_meta.time_spec = uhd::time_spec_t(txflagtimefull,txflagtimefrac);
+            std::cout << "Samples ready :" << txflagtimefull << ":" << txflagtimefrac << std::endl;
         }
-        txflagtime = 0.0;
         m_usrp.send_burst(samples);
+        txflagtimefrac += 0.0000001*N;
+        txflagtimefull += std::floor(txflagtimefrac);
+        txflagtimefrac -= std::floor(txflagtimefrac);
     }
 
 }
