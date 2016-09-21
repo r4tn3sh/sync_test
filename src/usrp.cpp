@@ -74,20 +74,20 @@ namespace fun
         tx_metadata.end_of_burst = true;
         tx_metadata.has_time_spec = false;
 
-        uhd::time_spec_t temp_time = m_usrp->get_time_now();
-        double temp_full_time = temp_time.get_full_secs();
-        double temp_frac_time = temp_time.get_frac_secs();
-        
-        if (tx_meta.time_spec.get_full_secs() >= temp_full_time && tx_meta.time_spec.get_frac_secs() > temp_frac_time)
-        {
-            tx_metadata.has_time_spec = true;
-            tx_metadata.time_spec = tx_meta.time_spec;
+        // uhd::time_spec_t temp_time = m_usrp->get_time_now();
+        // double temp_full_time = temp_time.get_full_secs();
+        // double temp_frac_time = temp_time.get_frac_secs();
+        // 
+        // if (tx_meta.time_spec.get_full_secs() >= temp_full_time && tx_meta.time_spec.get_frac_secs() > temp_frac_time)
+        // {
+         tx_metadata.has_time_spec = tx_meta.has_time_spec;
+         tx_metadata.time_spec = tx_meta.time_spec;
 
-            std::cout << temp_full_time << " : " << temp_frac_time << std::endl;
-            // std::cout << tx_meta.time_spec.get_frac_secs() << ":" << m_usrp->get_time_now().get_frac_secs() << std::endl;
-            // std::cout << tx_meta.time_spec.get_full_secs() << ":" << m_usrp->get_time_now().get_full_secs() << std::endl;
-            // std::cout << std::endl;
-        }
+             // std::cout << temp_full_time << " : " << temp_frac_time << std::endl;
+             // std::cout << tx_meta.time_spec.get_frac_secs() << ":" << m_usrp->get_time_now().get_frac_secs() << std::endl;
+             // std::cout << tx_meta.time_spec.get_full_secs() << ":" << m_usrp->get_time_now().get_full_secs() << std::endl;
+             // std::cout << std::endl;
+        // }
         
         m_tx_streamer->send(&samples[0], samples.size(), tx_metadata);
 

@@ -41,16 +41,19 @@ namespace fun {
         }
         // std::cout << "Samples ready" << std::endl;
         // m_usrp.send_burst_sync(samples);
-        if (txflagtimefull+txflagtimefrac>0.0)
+        m_usrp.tx_meta.has_time_spec = false;
+        if (txflagtimefull>0.0 && txflagtimefrac>0.0)
         {
             m_usrp.tx_meta.has_time_spec = true;
             m_usrp.tx_meta.time_spec = uhd::time_spec_t(txflagtimefull,txflagtimefrac);
             std::cout << "Samples ready :" << txflagtimefull << ":" << txflagtimefrac << std::endl;
+            txflagtimefrac = 0.0;
+            txflagtimefull = 0.0;
+            // txflagtimefrac += 0.0000001*N;
+            // txflagtimefull += std::floor(txflagtimefrac);
+            // txflagtimefrac -= std::floor(txflagtimefrac);
         }
         m_usrp.send_burst(samples);
-        txflagtimefrac += 0.0000001*N;
-        txflagtimefull += std::floor(txflagtimefrac);
-        txflagtimefrac -= std::floor(txflagtimefrac);
     }
 
 }
