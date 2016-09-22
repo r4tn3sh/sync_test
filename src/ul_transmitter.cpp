@@ -42,7 +42,7 @@ namespace fun {
         // std::cout << "Samples ready" << std::endl;
         // m_usrp.send_burst_sync(samples);
         m_usrp.tx_meta.has_time_spec = false;
-        if (txflagtimefull>0.0 && txflagtimefrac>0.0)
+        if (txflagtimefull>0.0 || txflagtimefrac>0.0)
         {
             m_usrp.tx_meta.has_time_spec = true;
             m_usrp.tx_meta.time_spec = uhd::time_spec_t(txflagtimefull,txflagtimefrac);

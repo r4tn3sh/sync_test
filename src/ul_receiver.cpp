@@ -174,11 +174,6 @@ namespace fun
             
             if(corr_coeff>COEFFTHRESH)
             {
-
-                for (int j=0; j<N; j++)
-                {
-                    std::cout <<  " " << samples.at(i+j) <<" " << pnseq[j] << std::endl;
-                }
                 std::cout << "Correlation coefficient above threshold. " << corr_coeff  << std::endl;
                 // std::cout << "Correlation coefficient : " << corr_coeff << " " << abs(temp_mul) << " " << sqr_sum << " " << pow(abs(temp_mean),2) << " " <<(sqr_sum-N*pow(abs(temp_mean),2))*N <<  std::endl;
                 peak_location = i;

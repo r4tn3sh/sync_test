@@ -38,6 +38,7 @@ namespace fun
         m_usrp->set_rx_gain(m_params.rx_gain);
 
         m_usrp->set_clock_source("external");
+        m_usrp->set_time_now(0.0);
         // Set the RX antenna
         //m_usrp->set_rx_antenna("RX2");
 
