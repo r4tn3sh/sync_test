@@ -26,7 +26,7 @@ int wait_for_signal();
 double freq = 2e9;
 double sample_rate = 10e6;
 double tx_gain = 30;
-//double rx_gain = 30;
+double rx_gain = 20;
 double amp = 0.5;
 
 bool cbflag = false;
@@ -55,7 +55,7 @@ int main(int argc, char * argv[]){
     std::cout << params.device_addr <<std::endl;
     ul_transmitter tx = ul_transmitter(freq, sample_rate, tx_gain, amp, params.device_addr);
     // ul_transmitter tx = ul_transmitter(freq, params);
-    // ul_receiver rx = ul_receiver(&callback, freq, sample_rate, tx_gain, amp);
+    // ul_receiver rx = ul_receiver(&callback, freq, sample_rate, rx_gain, amp, params.device_addr);
     ul_receiver rx = ul_receiver(&callback, params);
 
     // Prepare the packets

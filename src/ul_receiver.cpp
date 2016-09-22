@@ -15,11 +15,12 @@ namespace fun
 {
     auto g_start_time = std::chrono::high_resolution_clock::now();
 
+    double samp_duration;
     /*!
      * This constructor shows exactly what parameters need to be set for the ul_receiver.
      */
     ul_receiver::ul_receiver(void (*callback)(int stp), double freq, double samp_rate, double rx_gain, std::string device_addr) :
-        ul_receiver(callback, usrp_params(freq, samp_rate, 20, rx_gain, 1.0, device_addr))
+        ul_receiver(callback, usrp_params(freq, samp_rate, 30, rx_gain, 1.0, device_addr))
     {
     }
 
@@ -32,6 +33,7 @@ namespace fun
         m_callback(callback)
     {
         sem_init(&m_pause, 0, 1); //Initial value is 1 so that the ul_receiver_chain_loop() will begin executing immediately
+        samp_duration = 1.0/params.rate;
         m_rec_thread = std::thread(&ul_receiver::seq_detector_loop, this); //Initialize the main ul_receiver thread
         // m_rec_thread = std::thread(&ul_receiver::ul_receiver_chain_loop, this); //Initialize the main ul_receiver thread
     }
@@ -74,7 +76,9 @@ namespace fun
 
             if(pk_index < PKTLEN)
             {
-                flagtimefrac = rx_md.time_spec.get_frac_secs() + pk_index*0.0000001 + 1000*80*0.0000001;
+                std::cout<< "Signal found at " << pk_index << " at time " << rx_md.time_spec.get_full_secs() << ":" <<rx_md.time_spec.get_frac_secs() << std::endl;
+                flagtimefrac = rx_md.time_spec.get_frac_secs() + (pk_index+159)*samp_duration + 64*640*samp_duration;
+                // flagtimefrac = rx_md.time_spec.get_frac_secs() + pk_index*0.0000001 + 10*640*0.0000001;
                 flagtimefull = rx_md.time_spec.get_full_secs() + std::floor(flagtimefrac);
                 flagtimefrac = flagtimefrac - std::floor(flagtimefrac);
                 m_callback(pk_index);
@@ -155,15 +159,6 @@ namespace fun
             // std::cout << "Sample sum : " << temp_mean << std::endl;
             temp_mean/=N;
             temp_norm_v = 0.0;
-            // for (int j=0; j<ULSEQLEN; j++)
-            // {
-            //     // temp_norm_v += abs((samples[i+j]-temp_mean)*conj(samples[i+j]-temp_mean));
-            //     std::cout <<  " " << samples.at(i+j) <<" " << pow(abs(samples.at(i+j)),2) << std::endl;
-            //     // std::cout <<  " " << samples.at(i+j) <<" " << pow(abs(samples.at(i+j)-temp_mean),2) << std::endl;
-            //     // std::cout << " " << temp_norm_v << std::endl;
-            // }
-            // corr_coeff = abs(temp_mul-temp_mean)/(sqrt(temp_norm_v*ULSEQLEN));
-            // corr_coeff = abs(temp_mul)/(sqrt(temp_norm_v*ULSEQLEN));
             std::complex<double> scaled_temp_mean = N*pn_mean*temp_mean;
             numr = abs(temp_mul-scaled_temp_mean);
             denm = sqrt(sqr_sum-N*pow(abs(temp_mean),2))*sqrt(N);
@@ -187,31 +182,31 @@ namespace fun
                 std::cout << "Correlation coefficient above threshold. " << corr_coeff  << std::endl;
                 // std::cout << "Correlation coefficient : " << corr_coeff << " " << abs(temp_mul) << " " << sqr_sum << " " << pow(abs(temp_mean),2) << " " <<(sqr_sum-N*pow(abs(temp_mean),2))*N <<  std::endl;
                 peak_location = i;
-                // return(i);
+                return(i);
             }
         }
-        if (peak_location < PKTLEN)
-        {
-            auto end = std::chrono::high_resolution_clock::now();
-            // auto dur = end - start;
-            auto dur = end - g_start_time;
-            auto dur_ns = std::chrono::duration_cast<std::chrono::nanoseconds>(dur);
-            unsigned int i_dur_ns = dur_ns.count();
-            unsigned int wait_time = 64000 - (i_dur_ns - peak_location*100)%64000;
-            std::cout << "Duration " << dur_ns.count() << " : " << wait_time<< std::endl;
+        // if (peak_location < PKTLEN)
+        // {
+        //     auto end = std::chrono::high_resolution_clock::now();
+        //     // auto dur = end - start;
+        //     auto dur = end - g_start_time;
+        //     auto dur_ns = std::chrono::duration_cast<std::chrono::nanoseconds>(dur);
+        //     unsigned int i_dur_ns = dur_ns.count();
+        //     unsigned int wait_time = 64000 - (i_dur_ns - peak_location*100)%64000;
+        //     std::cout << "Duration " << dur_ns.count() << " : " << wait_time<< std::endl;
 
-            // Assuming one iteration takes 55 nanoseconds
-            // start = std::chrono::high_resolution_clock::now();
-            for (int j=0; j<wait_time/55; j++)
-            {
-                std::cout << "*";
-            }
-            // end = std::chrono::high_resolution_clock::now();
-            // dur = end - start;
-            // dur_ns = std::chrono::duration_cast<std::chrono::nanoseconds>(dur);
-            // std::cout << "Duration " << dur_ns.count() <<  std::endl;
-            
-        }
+        //     // Assuming one iteration takes 55 nanoseconds
+        //     // start = std::chrono::high_resolution_clock::now();
+        //     for (int j=0; j<wait_time/55; j++)
+        //     {
+        //         std::cout << "*";
+        //     }
+        //     // end = std::chrono::high_resolution_clock::now();
+        //     // dur = end - start;
+        //     // dur_ns = std::chrono::duration_cast<std::chrono::nanoseconds>(dur);
+        //     // std::cout << "Duration " << dur_ns.count() <<  std::endl;
+        //     
+        // }
         return(peak_location);
     }
 

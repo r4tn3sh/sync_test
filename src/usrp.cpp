@@ -37,6 +37,7 @@ namespace fun
         m_usrp->set_tx_gain(m_params.tx_gain);
         m_usrp->set_rx_gain(m_params.rx_gain);
 
+        m_usrp->set_clock_source("external");
         // Set the RX antenna
         //m_usrp->set_rx_antenna("RX2");
 
